@@ -1,23 +1,15 @@
 import streamlit as st
 import os
 from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate,MessagesPlaceholder
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents import create_openai_functions_agent, AgentExecutor
-# Useful to add documents to the chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-# Useful to load the URL into documents
 from langchain_community.document_loaders import WebBaseLoader
-# Split the Web page into multiple chunks
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-# Create Embeddings
 from langchain_openai import OpenAIEmbeddings
-# Vector Database FAISS
 from langchain_community.vectorstores.faiss import FAISS
-# USeful to create the Retrieval part
 from langchain.chains import create_retrieval_chain
-#Human Message and AI message
 from langchain_core.messages import HumanMessage, AIMessage
-# Retriever tool
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.tools.tavily_search import TavilySearchResults
 
@@ -25,7 +17,7 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 os.environ['TAVILY_API_KEY'] = 'tavily_key'
 
 # Access the TAVILY API key from the environment variables
-tavily_api_key= os.getenv('TAVILY_API_KEY')
+tavily_api_key = os.getenv('TAVILY_API_KEY')
 
 # Create Retriever
 loader = WebBaseLoader("https://python.langchain.com/docs/expression_language/")
@@ -40,19 +32,19 @@ splitDocs = splitter.split_documents(docs)
 st.title("Tavily Search")
 openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
 tavily_key = st.sidebar.text_input('Tavily API Key', type='password')
-if not openai_api_key.startswith('sk-'):
-   st.warning('Please enter your OpenAI API key!', icon='⚠')
-if openai_api_key.startswith('sk-') and tavily_key:
 
-    embedding = OpenAIEmbeddings(api_key = openai_api_key)
+if not openai_api_key.startswith('sk-'):
+    st.warning('Please enter your OpenAI API key!', icon='⚠')
+elif openai_api_key.startswith('sk-') and tavily_key:
+    embedding = OpenAIEmbeddings(api_key=openai_api_key)
     vectorStore = FAISS.from_documents(docs, embedding=embedding)
     retriever = vectorStore.as_retriever(search_kwargs={"k": 3})
 
     model = ChatOpenAI(
-            model='gpt-3.5-turbo-1106',
-            temperature=0.7,
-            api_key = openai_api_key
-    )        
+        model='gpt-3.5-turbo-1106',
+        temperature=0.7,
+        api_key=openai_api_key
+    )
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", "You are a friendly assistant called Max."),
@@ -88,16 +80,14 @@ if openai_api_key.startswith('sk-') and tavily_key:
         })
         return response["output"]
 
-    if __name__ == '__main__':
-        chat_history = []
-        while True:
-          user_input = input("You: ")
-          if user_input.lower() == 'exit':
-              break
+    chat_history = []
 
-          response = process_chat(agentExecutor, user_input, chat_history)
-          chat_history.append(HumanMessage(content=user_input))
-          chat_history.append(AIMessage(content=response))
-          st.write("Assistant:", response)
+    user_input = st.text_input("You: ", "")
+    if st.button("Send"):
+        if user_input:
+            response = process_chat(agentExecutor, user_input, chat_history)
+            chat_history.append(HumanMessage(content=user_input))
+            chat_history.append(AIMessage(content=response))
+            st.write("Assistant:", response)
 else:
-   st.warning("Please enter your OpenAI API Key")
+    st.warning("Please enter your OpenAI API Key")
