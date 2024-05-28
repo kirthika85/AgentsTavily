@@ -36,7 +36,7 @@ splitter = RecursiveCharacterTextSplitter(
 )
 splitDocs = splitter.split_documents(docs)
 
-embedding = OpenAIEmbeddings(api_key = openapikey)
+embedding = OpenAIEmbeddings(api_key = openai_api_key)
 vectorStore = FAISS.from_documents(docs, embedding=embedding)
 retriever = vectorStore.as_retriever(search_kwargs={"k": 3})
 
