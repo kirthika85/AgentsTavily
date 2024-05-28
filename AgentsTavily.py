@@ -93,7 +93,7 @@ elif openai_api_key.startswith('sk-') and tavily_api_key:
     for i, message in enumerate(st.session_state.chat_history):
         if isinstance(message, HumanMessage):
             st.write(f"You: {message.content}")
-        else:
+        elif isinstance(message, AIMessage):
             st.write(f"Assistant: {message.content}")
 else:
     st.warning("Please enter your OpenAI API Key and Tavily API Key")
