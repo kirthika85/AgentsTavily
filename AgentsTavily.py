@@ -51,9 +51,21 @@ elif openai_api_key.startswith('sk-') and tavily_api_key:
     ])
 
     # Set up Tavily search tool
-    st.write("going to call search ")
     search = TavilySearchResults(api_key=tavily_api_key)
+    st.write("TavilySearchResults Object:")
     st.write(search)
+
+    # Print specific attributes if available
+    if hasattr(search, 'api_key'):
+        st.write("Tavily API Key:", search.api_key)
+
+    # Using dir() to list available attributes and methods
+    st.write("Attributes and Methods of search object:")
+    st.write(dir(search))
+
+    # Using vars() to get the __dict__ of the object (if available)
+    st.write("search object __dict__:")
+    st.write(vars(search))
 
     retriever_tool = create_retriever_tool(
         retriever,
