@@ -79,14 +79,21 @@ elif openai_api_key.startswith('sk-') and tavily_api_key:
         })
         return response["output"]
 
-    chat_history = []
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
 
     user_input = st.text_input("You: ", "")
     if st.button("Send"):
         if user_input:
-            response = process_chat(agentExecutor, user_input, chat_history)
-            chat_history.append(HumanMessage(content=user_input))
-            chat_history.append(AIMessage(content=response))
-            st.write("Assistant:", response)
+            response = process_chat(agentExecutor, user_input, st.session_state.chat_history)
+            st.session_state.chat_history.append(HumanMessage(content=user_input))
+            st.session_state.chat_history.append(AIMessage(content=response))
+
+    # Display chat history
+    for i, message in enumerate(st.session_state.chat_history):
+        if isinstance(message, HumanMessage):
+            st.write(f"You: {message.content}")
+        else:
+            st.write(f"Assistant: {message.content}")
 else:
     st.warning("Please enter your OpenAI API Key and Tavily API Key")
