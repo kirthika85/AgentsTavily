@@ -86,7 +86,7 @@ if openai_api_key.startswith('sk-') and tavily_key:
             "input": user_input,
             "chat_history": chat_history
         })
-    return response["output"]
+        return response["output"]
 
     if __name__ == '__main__':
         chat_history = []
