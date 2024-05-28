@@ -37,7 +37,7 @@ splitter = RecursiveCharacterTextSplitter(
 )
 splitDocs = splitter.split_documents(docs)
 
-st.title("Document Search with RAG")
+st.title("Tavily Search")
 openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
 tavily_key = st.sidebar.text_input('Tavily API Key', type='password')
 if not openai_api_key.startswith('sk-'):
