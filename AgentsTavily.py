@@ -54,6 +54,7 @@ elif openai_api_key.startswith('sk-') and tavily_key:
     ])
 
     search = TavilySearchResults()
+    st.write(search)
 
     retriever_tools = create_retriever_tool(
         retriever,
