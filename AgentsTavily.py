@@ -79,6 +79,7 @@ elif openai_api_key.startswith('sk-') and tavily_api_key:
             "input": user_input,
             "chat_history": chat_history
         })
+        st.write(response["output"])
         return response["output"]
 
     if "chat_history" not in st.session_state:
