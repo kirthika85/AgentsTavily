@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from langchain_openai import ChatOpenAI
+from langchain.llms import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents import create_openai_functions_agent, AgentExecutor
 from langchain_community.document_loaders import WebBaseLoader
