@@ -1,5 +1,6 @@
 openai 
-langchain 
+langchain
+langchain.llms
 langchain-openai 
 faiss-cpu 
 langchain_community
